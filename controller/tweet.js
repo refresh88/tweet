@@ -1,17 +1,17 @@
 import * as tweetRepositroy from '../data/tweet.js';
 
-export function getTweets(req, res, next) {
+export async function getTweets(req, res, next) {
   // 유저명이 있을때 / 없을때
   const username = req.query.username;
-  const data = username
+  const data = await (username
     ? tweetRepositroy.getAllByUsername(username)
-    : tweetRepositroy.getAll();
+    : tweetRepositroy.getAll());
   res.status(200).json(data);
 }
 
-export function getTweet(req, res) {
+export async function getTweet(req, res) {
   const id = req.params.id;
-  const tweet = tweetRepositroy.getById(id);
+  const tweet = await tweetRepositroy.getById(id);
   if (tweet) {
     res.status(200).json(tweet);
   } else {
@@ -19,16 +19,16 @@ export function getTweet(req, res) {
   }
 }
 
-export function createTweet(req, res) {
+export async function createTweet(req, res) {
   const { text, name, username } = req.body;
-  const tweet = tweetRepositroy.create(text, name, username);
+  const tweet = await tweetRepositroy.create(text, name, username);
   res.status(201).json(tweet);
 }
 
-export function updateTweet(req, res) {
+export async function updateTweet(req, res) {
   const id = req.params.id;
   const text = req.body.text;
-  const tweet = tweetRepositroy.update(id, text);
+  const tweet = await tweetRepositroy.update(id, text);
   if (tweet) {
     res.status(200).json(tweet);
   } else {
@@ -36,7 +36,7 @@ export function updateTweet(req, res) {
   }
 }
 
-export function deleteTweet(req, res) {
+export async function deleteTweet(req, res) {
   const id = req.params.id;
   tweetRepositroy.remove(id);
   res.sendStatus(204);
